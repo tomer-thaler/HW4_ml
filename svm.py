@@ -29,6 +29,7 @@ def plot_results(models, titles, X, y, plot_sv=False):
         ax.set_title(title)
         ax.set_aspect('equal', 'box')
     fig.tight_layout()
+    plt.savefig('part_c.png')
     plt.show()
 
 def make_meshgrid(x, y, h=0.02):
@@ -89,8 +90,6 @@ def part_a(X, y, C=10):
     for m in models:
         m.fit(X, y)
     plot_results(models, titles, X, y)
-    plt.show()
-    plt.savefig("part_a.png")
 
 def part_b(X, y, C=10):
     models=[
@@ -101,8 +100,25 @@ def part_b(X, y, C=10):
     for m in models:
         m.fit(X, y)
     plot_results(models, titles, X, y)
-    plt.savefig("part_b.png")
+
+def part_c(X, y, C=10, flip_prob=0.1):
+    rng=np.random.default_rng(0)
+    y_noisy=y.copy()
+    mask=(y==-1)&(rng.random(len(y))<flip_prob)
+    y_noisy[mask]=1
+
+    models=[
+        svm.SVC(C=C, kernel='poly', degree=2, coef0=1, gamma='auto'),
+        svm.SVC(kernel='rbf', gamma=10, C=C)
+    ]
+    titles=['poly2_nonhom noisy', 'rbf_gamma10 noisy']
+    for m in models:
+        m.fit(X, y_noisy)
+    plot_results(models, titles, X, y_noisy)
 
 if __name__ == "__main__":
     print("running SVM experiments…")
-    part_a(X, y)
+    #part_a(X, y)
+    #part_b(X, y)
+    part_c(X, y)
+
