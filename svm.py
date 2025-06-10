@@ -70,10 +70,7 @@ C_hard = 1000000.0  # SVM regularization parameter
 C = 10
 n = 100
 
-
-
 # Data is labeled by a circle
-
 radius = np.hstack([np.random.random(n), np.random.random(n) + 1.5])
 angles = 2 * math.pi * np.random.random(2 * n)
 X1 = (radius * np.cos(angles)).reshape((2 * n, 1))
@@ -82,5 +79,30 @@ X2 = (radius * np.sin(angles)).reshape((2 * n, 1))
 X = np.concatenate([X1,X2],axis=1)
 y = np.concatenate([np.ones((n,1)), -np.ones((n,1))], axis=0).reshape([-1])
 
+def part_a(X, y, C=10):
+    models=[
+        svm.SVC(C=C, kernel='linear'),
+        svm.SVC(C=C, kernel='poly', degree=2, coef0=0, gamma='auto'),
+        svm.SVC(C=C, kernel='poly', degree=3, coef0=0, gamma='auto')
+    ]
+    titles=['linear', 'poly2_hom', 'poly3_hom']
+    for m in models:
+        m.fit(X, y)
+    plot_results(models, titles, X, y)
+    plt.show()
+    plt.savefig("part_a.png")
 
+def part_b(X, y, C=10):
+    models=[
+        svm.SVC(C=C, kernel='poly', degree=2, coef0=1, gamma='auto'),
+        svm.SVC(C=C, kernel='poly', degree=3, coef0=1, gamma='auto')
+    ]
+    titles=['poly2_nonhom', 'poly3_nonhom']
+    for m in models:
+        m.fit(X, y)
+    plot_results(models, titles, X, y)
+    plt.savefig("part_b.png")
 
+if __name__ == "__main__":
+    print("running SVM experiments…")
+    part_a(X, y)
