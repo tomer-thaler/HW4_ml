@@ -29,6 +29,7 @@ def plot_results(models, titles, X, y, plot_sv=False):
         ax.set_title(title)
         ax.set_aspect('equal', 'box')
     fig.tight_layout()
+    plt.savefig('c2.png')
     plt.show()
 
 def make_meshgrid(x, y, h=0.02):
@@ -79,6 +80,7 @@ X2 = (radius * np.sin(angles)).reshape((2 * n, 1))
 X = np.concatenate([X1,X2],axis=1)
 y = np.concatenate([np.ones((n,1)), -np.ones((n,1))], axis=0).reshape([-1])
 
+# my code from now on
 def part_a(X, y, C=10):
     models=[
         svm.SVC(C=C, kernel='linear'),
@@ -100,9 +102,7 @@ def part_b(X, y, C=10):
         m.fit(X, y)
     plot_results(models, titles, X, y)
 
-def part_c(X, y, y_noisy, C=10,flip_prob=0.1):
-
-
+def part_c(X, y, y_noisy, C=10):
     models=[
         svm.SVC(C=C, kernel='poly', degree=2, coef0=1, gamma='auto'),
         svm.SVC(kernel='rbf', gamma=10, C=C)
@@ -113,30 +113,22 @@ def part_c(X, y, y_noisy, C=10,flip_prob=0.1):
     plot_results(models, titles, X, y_noisy)
 
 def explore_rbf_gammas(X, y_noisy, C=10, gammas=(0.1, 0.5, 5, 30, 100)):
-    """
-    Saves a combined plot: rbf_gamma_sweep.png
-    """
-
     models=[]
     titles=[]
-
-    # add RBF models with different γ
     for g in gammas:
         models.append(svm.SVC(kernel='rbf', gamma=g, C=C))
         titles.append(f"rbf_g{g}")
 
-    # fit and print training accuracy
-    for clf,title in zip(models, titles):
-        clf.fit(X, y_noisy)
+    for m in models:
+        m.fit(X, y_noisy)
 
     plot_results(models, titles, X, y_noisy)
 
-
-
 if __name__ == "__main__":
-    print("running SVM experiments…")
     #part_a(X, y)
     #part_b(X, y)
+
+    #getting data ready for part c:
     rng = np.random.default_rng(0)
     y_noisy = y.copy()
     flip_prob = 0.1
