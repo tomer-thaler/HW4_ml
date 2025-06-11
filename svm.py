@@ -29,7 +29,6 @@ def plot_results(models, titles, X, y, plot_sv=False):
         ax.set_title(title)
         ax.set_aspect('equal', 'box')
     fig.tight_layout()
-    plt.savefig('c2.png')
     plt.show()
 
 def make_meshgrid(x, y, h=0.02):
@@ -102,7 +101,7 @@ def part_b(X, y, C=10):
         m.fit(X, y)
     plot_results(models, titles, X, y)
 
-def part_c(X, y, y_noisy, C=10):
+def part_c(X, y_noisy, C=10):
     models=[
         svm.SVC(C=C, kernel='poly', degree=2, coef0=1, gamma='auto'),
         svm.SVC(kernel='rbf', gamma=10, C=C)
@@ -135,7 +134,7 @@ if __name__ == "__main__":
     mask = (y == -1) & (rng.random(len(y)) < flip_prob)
     y_noisy[mask] = 1
 
-    #part_c(X, y,y_noisy)
+    #part_c(X,y_noisy)
     #explore_rbf_gammas(X, y_noisy)
 
 
